@@ -546,6 +546,43 @@
   }
   .btn-unlock:hover{background:#2a2a2a;}
   .app-content.hidden{display:none;}
+
+  /* ---------- MOBILE STICKY BAR ---------- */
+  .mobile-sticky-bar{display:none;}
+  @media (max-width:900px){
+    .mobile-sticky-bar{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      position:sticky;
+      top:0;
+      z-index:1000;
+      background:var(--black);
+      color:#fff;
+      padding:12px 16px;
+      border-bottom:2px solid #fff;
+      font-family:'Sora', sans-serif;
+      font-weight:700;
+      font-size:15px;
+      letter-spacing:0.6px;
+      text-transform:uppercase;
+    }
+    .mobile-sticky-bar img{
+      width:34px;
+      height:34px;
+      object-fit:contain;
+      flex-shrink:0;
+    }
+    .mobile-sticky-bar span{
+      border-bottom:2px solid #fff;
+      padding-bottom:2px;
+      line-height:1.2;
+    }
+  }
+  @media print{
+    .mobile-sticky-bar{display:none !important;}
+  }
 </style>
 </head>
 <body>
@@ -566,6 +603,11 @@
 </div>
 
 <div id="appContent" class="app-content hidden">
+
+<div class="mobile-sticky-bar">
+  <img src="logo.png" alt="">
+  <span>Generate Invoice</span>
+</div>
 
 <div class="layout">
 
