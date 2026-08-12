@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Double Glazing Expert - Invoice Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --gold:#e8a33d;
+    --gold-dark:#c98a2e;
+    --black:#111111;
+    --paper:#ffffff;
+    --grey-text:#333333;
+    --light-grey:#f7f7f5;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Figtree', Arial, sans-serif;
+    background:#e9e9e9;
+    color:var(--grey-text);
+    padding:24px;
+    overflow-x:hidden;
+  }
+  h1, h2, h3, h4{
+    font-family:'Sora', 'Segoe UI', Arial, sans-serif;
+  }
+  /* Thin gold scrollbars */
+  *{
+    scrollbar-width:thin;
+    scrollbar-color:var(--gold) #f0f0f0;
+  }
+  *::-webkit-scrollbar{
+    width:8px;
+    height:8px;
+  }
+  *::-webkit-scrollbar-track{
+    background:#f0f0f0;
+    border-radius:10px;
+  }
+  *::-webkit-scrollbar-thumb{
+    background:var(--gold);
+    border-radius:10px;
+  }
+  *::-webkit-scrollbar-thumb:hover{
+    background:var(--gold-dark);
+  }
+  .layout{
+    display:flex;
+    gap:28px;
+    max-width:1500px;
+    margin:0 auto;
+    align-items:flex-start;
+  }
+  /* ---------- FORM PANEL ---------- */
+  .form-panel{
+    flex:0 0 420px;
+    background:var(--paper);
+    border-radius:10px;
+    padding:24px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.12);
+    max-height:calc(100vh - 48px);
+    overflow-y:auto;
+    position:sticky;
+    top:24px;
+  }
+  .form-panel h2{
+    margin-top:0;
+    font-size:20px;
+    font-family:'Sora', sans-serif;
+    color:var(--black);
+    border-bottom:3px solid var(--gold);
+    padding-bottom:10px;
+  }
+  .form-panel h3{
+    font-size:13px;
+    font-family:'Sora', sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    color:var(--gold-dark);
+    margin:20px 0 8px;
+    border-top:1px solid #eee;
+    padding-top:14px;
+  }
+  .form-panel h3:first-of-type{border-top:none;padding-top:0;}
+  label{
+    display:block;
+    font-size:12.5px;
+    font-weight:600;
+    margin:10px 0 4px;
+    color:#444;
+  }
+  input[type=text], input[type=number], input[type=date], textarea{
+    width:100%;
+    padding:8px 10px;
+    border:1px solid #ccc;
+    border-radius:6px;
+    font-size:13.5px;
+    font-family:'Figtree', inherit;
+    background:#fff;
+  }
+  input:focus, textarea:focus{
+    outline:none;
+    border-color:var(--gold);
+    box-shadow:0 0 0 2px rgba(232,163,61,0.25);
+  }
+  textarea{resize:vertical;min-height:50px;}
+  .row2{display:flex; gap:10px;}
+  .row2 > div{flex:1;}
+  .item-block{
+    border:1px dashed #ddd;
+    border-radius:8px;
+    padding:10px;
+    margin-top:10px;
+    position:relative;
+    background:var(--light-grey);
+  }
+  .item-block .remove-item{
+    position:absolute;
+    top:6px; right:8px;
+    background:none;
+    border:none;
+    color:#b33;
+    font-size:13px;
+    cursor:pointer;
+    font-weight:700;
+  }
+  .btn{
+    display:inline-block;
+    padding:8px 14px;
+    border-radius:6px;
+    border:none;
+    font-size:13px;
+    font-family:'Sora', sans-serif;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .btn-add{
+    background:#fff;
+    border:1.5px dashed var(--gold-dark);
+    color:var(--gold-dark);
+    width:100%;
+    margin-top:8px;
+  }
+  .btn-add:hover{background:#fff8ec;}
+  .btn-generate{
+    background:var(--black);
+    color:var(--gold);
+    width:100%;
+    padding:13px;
+    font-size:15px;
+    margin-top:22px;
+    letter-spacing:0.5px;
+  }
+  .btn-generate:hover{background:#2a2a2a;}
+  .btn-print{
+    background:var(--gold);
+    color:var(--black);
+    width:100%;
+    padding:11px;
+    font-size:14px;
+    margin-top:10px;
+  }
+  .btn-print:hover{background:var(--gold-dark); color:#fff;}
+  .financials-note{
+    font-size:11.5px;
+    color:#777;
+    margin-top:4px;
+  }
+
+  /* ---------- INVOICE PANEL ---------- */
+  .invoice-panel{
+    flex:1;
+    min-width:0;
+    display:flex;
+    justify-content:center;
+  }
+  #invoice{
+    width:850px;
+    max-width:100%;
+    background:var(--paper);
+    border:2px solid var(--gold);
+    border-radius:8px;
+    overflow:hidden;
+    box-shadow:0 2px 14px rgba(0,0,0,0.15);
+  }
+  .inv-body{
+    padding:32px 45px 40px;
+  }
+  .inv-header{
+    display:flex;
+    align-items:center;
+    gap:28px;
+    background:var(--black);
+    padding:30px 45px;
+  }
+  .inv-header .logo-wrap{
+    width:130px;
+    height:130px;
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .inv-header img{
+    width:130px;
+    height:130px;
+    object-fit:contain;
+    flex-shrink:0;
+  }
+  .inv-divider-v{
+    width:2px;
+    align-self:stretch;
+    background:var(--gold);
+    min-height:90px;
+  }
+  .inv-header-right{
+    flex:1;
+    min-width:0;
+  }
+  .inv-header-right h1{
+    font-size:44px;
+    margin:0 0 12px;
+    font-family:'Sora', sans-serif;
+    color:var(--gold);
+    letter-spacing:1px;
+    font-weight:800;
+  }
+  .inv-meta-line{
+    display:flex;
+    justify-content:space-between;
+    border-top:1px solid rgba(232,163,61,0.4);
+    padding:8px 0;
+    font-size:14px;
+    color:#f0f0f0;
+  }
+  .inv-meta-line strong{color:var(--gold);}
+  .hr-full{
+    border:none;
+    border-top:2px solid var(--gold);
+    margin:20px 0;
+  }
+  .parties{
+    display:flex;
+    justify-content:space-between;
+    gap:30px;
+    margin-bottom:24px;
+  }
+  .party{flex:1;}
+  .party h3{
+    color:var(--gold-dark);
+    font-size:16px;
+    font-family:'Sora', sans-serif;
+    font-weight:700;
+    letter-spacing:0.5px;
+    margin:0 0 10px;
+    padding-bottom:6px;
+    border-bottom:2px solid var(--gold);
+  }
+  .party p{margin:3px 0; font-size:14px; line-height:1.5;}
+  .party p.name{font-weight:700; color:var(--black); font-size:15px;}
+
+  table.items{
+    width:100%;
+    border-collapse:collapse;
+    border:2px solid var(--gold);
+    margin-bottom:0;
+  }
+  table.items thead th{
+    background:var(--black);
+    color:var(--gold);
+    text-align:left;
+    padding:10px 16px;
+    font-size:14px;
+    font-family:'Sora', sans-serif;
+    letter-spacing:0.5px;
+  }
+  table.items thead th.amount-col{text-align:right;}
+  table.items td{
+    padding:14px 16px;
+    font-size:14px;
+    vertical-align:top;
+    border-top:1px solid #f0e0c0;
+  }
+  table.items td.amount-col{
+    text-align:right;
+    font-weight:700;
+    white-space:nowrap;
+  }
+  table.items td.desc-col{line-height:1.6;}
+  table.items td.desc-col .extra-line{
+    display:block;
+    font-weight:600;
+    margin-top:2px;
+  }
+  .bottom-grid{
+    display:flex;
+    gap:16px;
+    margin-top:20px;
+    align-items:stretch;
+  }
+  .notes-box{
+    flex:1.1;
+  }
+  .notes-box h4, .bank-box h4{
+    color:var(--gold-dark);
+    font-size:13.5px;
+    font-family:'Sora', sans-serif;
+    font-weight:700;
+    letter-spacing:0.5px;
+    margin:0 0 8px;
+    padding-bottom:5px;
+    border-bottom:2px solid var(--gold);
+  }
+  .notes-box p{
+    font-size:12px;
+    line-height:1.6;
+    margin:0;
+    color:#444;
+  }
+  .bank-box{
+    flex:1;
+    border:1px solid var(--gold);
+    border-radius:6px;
+    padding:12px 14px;
+  }
+  .bank-box p{font-size:12px; margin:4px 0; line-height:1.5;}
+  .bank-box strong{color:var(--black);}
+  .summary-box{
+    flex:1;
+    border:2px solid var(--gold);
+    border-radius:6px;
+    overflow:hidden;
+    align-self:flex-start;
+  }
+  .summary-box .sum-title{
+    background:var(--black);
+    color:var(--gold);
+    padding:8px 14px;
+    font-size:13.5px;
+    font-family:'Sora', sans-serif;
+    letter-spacing:0.5px;
+    font-weight:700;
+  }
+  .summary-box .sum-row{
+    display:flex;
+    justify-content:space-between;
+    padding:8px 14px;
+    font-size:13.5px;
+    border-top:1px solid #f0e0c0;
+  }
+  .summary-box .sum-row.balance{
+    background:var(--gold);
+    color:var(--black);
+    font-weight:800;
+    font-size:14.5px;
+  }
+  .thanks-box{
+    margin-top:20px;
+    border:1px solid var(--gold);
+    border-radius:6px;
+    text-align:center;
+    padding:14px;
+    font-size:13px;
+    color:#333;
+    line-height:1.6;
+  }
+  .thanks-box .heart{color:var(--gold-dark);}
+
+  @media print{
+    body{background:#fff; padding:0;}
+    .form-panel, .btn-print{display:none !important;}
+    .layout{display:block;}
+    #invoice{border:none; box-shadow:none; width:100%;}
+  }
+  @media (max-width:900px){
+    .layout{flex-direction:column;}
+    .form-panel{position:static; max-height:none; flex:none; width:100%;}
+    .inv-body{padding:24px;}
+    .inv-header{flex-wrap:wrap; padding:20px;}
+    .inv-header-right h1{font-size:34px;}
+    .parties{flex-direction:column;}
+    .bottom-grid{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ============ FORM PANEL ============ -->
+  <div class="form-panel">
+    <h2>Invoice Details</h2>
+
+    <h3>Invoice Info</h3>
+    <div class="row2">
+      <div>
+        <label>Invoice Number</label>
+        <input type="text" id="invNumber" value="1003">
+      </div>
+      <div>
+        <label>Invoice Date</label>
+        <input type="date" id="invDate">
+      </div>
+    </div>
+
+    <h3>From (Your Company)</h3>
+    <label>Company Name</label>
+    <input type="text" id="fromName" value="Double Glazing Expert Limited">
+    <label>Address</label>
+    <textarea id="fromAddress">208 Forest Road
+E17 6JG</textarea>
+    <label>Phone</label>
+    <input type="text" id="fromPhone" value="07950 692018">
+
+    <h3>To (Customer)</h3>
+    <label>Customer Name</label>
+    <input type="text" id="toName" value="Christopher Knott">
+    <label>Address</label>
+    <textarea id="toAddress">38 Neville Close
+Leytonstone
+E11 3QH</textarea>
+    <label>Phone</label>
+    <input type="text" id="toPhone" value="07590 649331">
+
+    <h3>Job / Items</h3>
+    <div id="itemsContainer"></div>
+    <button type="button" class="btn btn-add" onclick="addItem()">+ Add another item</button>
+
+    <h3>Extra Charges &amp; Payment Info</h3>
+    <label>Delivery Charges (£)</label>
+    <input type="number" id="deliveryCharge" value="80" step="0.01">
+    <label>Deposit Paid (£)</label>
+    <input type="number" id="depositPaid" value="1330" step="0.01">
+    <div class="financials-note">Subtotal is auto-calculated from item amounts. Balance Due = Subtotal − Deposit Paid.</div>
+
+    <h3>Notes / Terms</h3>
+    <textarea id="notesText" style="min-height:90px;">The remaining balance is due before delivery.
+When delivery is confirmed, payment must be made immediately 1–2 days before delivery.
+Please do not pay the delivery man.
+Payment must be made directly to our account.</textarea>
+
+    <h3>Bank Account Details</h3>
+    <label>Bank Name</label>
+    <input type="text" id="bankName" value="NatWest Business Account">
+    <label>Sort Code</label>
+    <input type="text" id="sortCode" value="602223">
+    <label>Account Number</label>
+    <input type="text" id="accountNumber" value="76140067">
+
+    <h3>Thank You Message</h3>
+    <textarea id="thankYouText" style="min-height:50px;">Thank you for giving us the opportunity to complete this job.
+We truly appreciate your business and hope to work with you again in the future.</textarea>
+
+    <button type="button" class="btn btn-print" onclick="window.print()">Print / Save as PDF</button>
+  </div>
+
+  <!-- ============ INVOICE PANEL ============ -->
+  <div class="invoice-panel">
+    <div id="invoice">
+
+      <div class="inv-header">
+        <div class="logo-wrap">
+          <img src="https://doubleglazingexperts.com/wp-content/uploads/2026/05/cropped-cropped-DOUBLE-GLAZING-EXPERT-LOGO-1-scaled-1-2.webp" alt="Double Glazing Expert Logo">
+        </div>
+        <div class="inv-divider-v"></div>
+        <div class="inv-header-right">
+          <h1>INVOICE</h1>
+          <div class="inv-meta-line"><strong>Invoice Number:</strong><span id="outInvNumber">1003</span></div>
+          <div class="inv-meta-line"><strong>Invoice Date:</strong><span id="outInvDate">01 August 2026</span></div>
+        </div>
+      </div>
+
+      <div class="inv-body">
+
+      <hr class="hr-full">
+
+      <div class="parties">
+        <div class="party">
+          <h3>FROM:</h3>
+          <p class="name" id="outFromName">Double Glazing Expert Limited</p>
+          <p id="outFromAddress">208 Forest Road<br>E17 6JG</p>
+          <p><strong>Phone:</strong> <span id="outFromPhone">07950 692018</span></p>
+        </div>
+        <div class="party">
+          <h3>TO:</h3>
+          <p class="name" id="outToName">Christopher Knott</p>
+          <p id="outToAddress">38 Neville Close<br>Leytonstone<br>E11 3QH</p>
+          <p><strong>Phone:</strong> <span id="outToPhone">07590 649331</span></p>
+        </div>
+      </div>
+
+      <table class="items">
+        <thead>
+          <tr>
+            <th>DESCRIPTION</th>
+            <th class="amount-col">AMOUNT</th>
+          </tr>
+        </thead>
+        <tbody id="itemsTableBody">
+        </tbody>
+      </table>
+
+      <div class="bottom-grid">
+        <div class="notes-box">
+          <h4>NOTES / TERMS</h4>
+          <p id="outNotes"></p>
+        </div>
+        <div class="bank-box">
+          <h4>BANK ACCOUNT DETAILS</h4>
+          <p><strong>Bank Name:</strong><br id="bankNameBreak"><span id="outBankName">NatWest Business Account</span></p>
+          <p><strong>Sort Code:</strong><br><span id="outSortCode">602223</span></p>
+          <p><strong>Account Number:</strong><br><span id="outAccountNumber">76140067</span></p>
+        </div>
+        <div class="summary-box">
+          <div class="sum-title">FINANCIAL SUMMARY</div>
+          <div class="sum-row"><span>Subtotal / Total</span><span id="outSubtotal">£0.00</span></div>
+          <div class="sum-row"><span>Deposit Paid</span><span id="outDeposit">£0.00</span></div>
+          <div class="sum-row balance"><span>BALANCE DUE</span><span id="outBalance">£0.00</span></div>
+        </div>
+      </div>
+
+      <div class="thanks-box" id="outThanks">
+        Thank you for giving us the opportunity to complete this job.<br>
+        We truly appreciate your business and hope to work with you again in the future.
+      </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let itemCount = 0;
+
+function addItem(desc = "One aluminium French door with side two panels, white colour, supply only.", amount = 2580){
+  itemCount++;
+  const id = itemCount;
+  const div = document.createElement('div');
+  div.className = 'item-block';
+  div.id = 'item-' + id;
+  div.innerHTML = `
+    <button type="button" class="remove-item" onclick="removeItem(${id})">&times; remove</button>
+    <label>Description</label>
+    <textarea id="itemDesc-${id}">${desc}</textarea>
+    <label>Amount (£)</label>
+    <input type="number" id="itemAmount-${id}" value="${amount}" step="0.01">
+  `;
+  document.getElementById('itemsContainer').appendChild(div);
+  generateInvoice();
+}
+
+function removeItem(id){
+  const el = document.getElementById('item-' + id);
+  if(el) el.remove();
+  generateInvoice();
+}
+
+function fmtMoney(n){
+  return '£' + n.toLocaleString('en-GB', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+
+function fmtDate(dateStr){
+  if(!dateStr) return '';
+  const d = new Date(dateStr + 'T00:00:00');
+  const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  return d.getDate().toString().padStart(2,'0') + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+function generateInvoice(){
+  // Meta
+  document.getElementById('outInvNumber').textContent = document.getElementById('invNumber').value;
+  const dateVal = document.getElementById('invDate').value;
+  document.getElementById('outInvDate').textContent = dateVal ? fmtDate(dateVal) : '01 August 2026';
+
+  // From
+  document.getElementById('outFromName').textContent = document.getElementById('fromName').value;
+  document.getElementById('outFromAddress').innerHTML = document.getElementById('fromAddress').value.replace(/\n/g,'<br>');
+  document.getElementById('outFromPhone').textContent = document.getElementById('fromPhone').value;
+
+  // To
+  document.getElementById('outToName').textContent = document.getElementById('toName').value;
+  document.getElementById('outToAddress').innerHTML = document.getElementById('toAddress').value.replace(/\n/g,'<br>');
+  document.getElementById('outToPhone').textContent = document.getElementById('toPhone').value;
+
+  // Items
+  const tbody = document.getElementById('itemsTableBody');
+  tbody.innerHTML = '';
+  let subtotal = 0;
+  const itemBlocks = document.querySelectorAll('.item-block');
+  itemBlocks.forEach(block => {
+    const id = block.id.split('-')[1];
+    const desc = document.getElementById('itemDesc-' + id).value;
+    const amt = parseFloat(document.getElementById('itemAmount-' + id).value) || 0;
+    subtotal += amt;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="desc-col">${desc.replace(/\n/g,'<br>')}</td><td class="amount-col">${fmtMoney(amt)}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  const delivery = parseFloat(document.getElementById('deliveryCharge').value) || 0;
+  const deposit = parseFloat(document.getElementById('depositPaid').value) || 0;
+
+  // Add a footer row inside the last cell area for delivery/total/deposit breakdown (matches template's style)
+  const infoRow = document.createElement('tr');
+  infoRow.innerHTML = `<td class="desc-col">
+      <span class="extra-line">Delivery charges: ${fmtMoney(delivery)}.</span>
+      <span class="extra-line">Total amount discussed: ${fmtMoney(subtotal)}.</span>
+      <span class="extra-line">Deposit paid: ${fmtMoney(deposit)}.</span>
+      <br>
+      <span class="extra-line">The remaining balance is due before delivery.</span>
+      <span class="extra-line">Once delivery is confirmed, payment is required immediately 1–2 days before delivery.</span>
+      <span class="extra-line">Do not pay the delivery man.</span>
+      <span class="extra-line">Payment must be made to our account.</span>
+    </td><td class="amount-col"></td>`;
+  tbody.appendChild(infoRow);
+
+  // Notes
+  document.getElementById('outNotes').innerHTML = document.getElementById('notesText').value.replace(/\n/g,'<br>');
+
+  // Bank
+  document.getElementById('outBankName').textContent = document.getElementById('bankName').value;
+  document.getElementById('outSortCode').textContent = document.getElementById('sortCode').value;
+  document.getElementById('outAccountNumber').textContent = document.getElementById('accountNumber').value;
+
+  // Financial summary
+  const balance = subtotal - deposit;
+  document.getElementById('outSubtotal').textContent = fmtMoney(subtotal);
+  document.getElementById('outDeposit').textContent = fmtMoney(deposit);
+  document.getElementById('outBalance').textContent = fmtMoney(balance);
+
+  // Thank you
+  const thanksLines = document.getElementById('thankYouText').value.split('\n').filter(l=>l.trim()!=='');
+  document.getElementById('outThanks').innerHTML = thanksLines.join('<br>');
+}
+
+// Live update: listen for any input/change anywhere in the form panel
+document.querySelector('.form-panel').addEventListener('input', generateInvoice);
+document.querySelector('.form-panel').addEventListener('change', generateInvoice);
+
+// init
+addItem();
+document.getElementById('invDate').valueAsDate = new Date('2026-08-01');
+generateInvoice();
+</script>
+
+</body>
+</html>
