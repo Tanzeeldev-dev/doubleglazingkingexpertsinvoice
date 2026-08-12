@@ -516,6 +516,8 @@
 E17 6JG</textarea>
     <label>Phone</label>
     <input type="text" id="fromPhone" value="07950 692018">
+    <label>Email</label>
+    <input type="text" id="fromEmail" value="info@doubleglazingexpert.com">
 
     <h3>To (Customer)</h3>
     <label>Customer Name</label>
@@ -585,6 +587,7 @@ We truly appreciate your business and hope to work with you again in the future.
           <p class="name" id="outFromName">Double Glazing Expert Limited</p>
           <p id="outFromAddress">208 Forest Road<br>E17 6JG</p>
           <p><strong>Phone:</strong> <span id="outFromPhone">07950 692018</span></p>
+          <p><strong>Email:</strong> <span id="outFromEmail">info@doubleglazingexpert.com</span></p>
         </div>
         <div class="party">
           <h3>TO:</h3>
@@ -717,6 +720,7 @@ function generateInvoice(){
   document.getElementById('outFromName').textContent = document.getElementById('fromName').value;
   document.getElementById('outFromAddress').innerHTML = document.getElementById('fromAddress').value.replace(/\n/g,'<br>');
   document.getElementById('outFromPhone').textContent = document.getElementById('fromPhone').value;
+  document.getElementById('outFromEmail').textContent = document.getElementById('fromEmail').value;
 
   // To
   document.getElementById('outToName').textContent = document.getElementById('toName').value;
