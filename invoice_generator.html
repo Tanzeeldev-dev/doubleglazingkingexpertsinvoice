@@ -108,6 +108,18 @@
     box-shadow:0 0 0 2px rgba(232,163,61,0.25);
   }
   textarea{resize:vertical;min-height:50px;}
+  .company-fixed{
+    background:var(--light-grey);
+    border:1px solid #e0e0e0;
+    border-radius:8px;
+    padding:12px 14px;
+    font-size:13.5px;
+    line-height:1.6;
+    color:#333;
+  }
+  .company-fixed p{margin:0 0 6px;}
+  .company-fixed p:last-child{margin-bottom:0;}
+  .company-fixed .company-name{font-weight:700; color:var(--black); font-size:14px;}
   .row2{display:flex; gap:10px;}
   .row2 > div{flex:1;}
   .item-block{
@@ -628,15 +640,12 @@
     </div>
 
     <h3>From (Your Company)</h3>
-    <label>Company Name</label>
-    <input type="text" id="fromName" value="Double Glazing Expert Limited">
-    <label>Address</label>
-    <textarea id="fromAddress">208 Forest Road
-E17 6JG</textarea>
-    <label>Phone</label>
-    <input type="text" id="fromPhone" value="07950 692018">
-    <label>Email</label>
-    <input type="text" id="fromEmail" value="info@doubleglazingexpert.com">
+    <div class="company-fixed">
+      <p class="company-name">Double Glazing Expert Limited</p>
+      <p>208 Forest Road<br>E17 6JG</p>
+      <p><strong>Phone:</strong> 07950 692018</p>
+      <p><strong>Email:</strong> info@doubleglazingexpert.com</p>
+    </div>
 
     <h3>To (Customer)</h3>
     <label>Customer Name</label>
@@ -762,6 +771,12 @@ We truly appreciate your business and hope to work with you again in the future.
 <script>
 const ACCESS_PASSWORD = 'ghulammustafa56@';
 const AUTH_KEY = 'dge_invoice_auth';
+const COMPANY = {
+  name: 'Double Glazing Expert Limited',
+  address: '208 Forest Road\nE17 6JG',
+  phone: '07950 692018',
+  email: 'info@doubleglazingexpert.com'
+};
 
 function unlockApp(){
   const input = document.getElementById('passwordInput');
@@ -836,10 +851,10 @@ function generateInvoice(){
   document.getElementById('outInvDate').textContent = dateVal ? fmtDate(dateVal) : '01 August 2026';
 
   // From
-  document.getElementById('outFromName').textContent = document.getElementById('fromName').value;
-  document.getElementById('outFromAddress').innerHTML = document.getElementById('fromAddress').value.replace(/\n/g,'<br>');
-  document.getElementById('outFromPhone').textContent = document.getElementById('fromPhone').value;
-  document.getElementById('outFromEmail').textContent = document.getElementById('fromEmail').value;
+  document.getElementById('outFromName').textContent = COMPANY.name;
+  document.getElementById('outFromAddress').innerHTML = COMPANY.address.replace(/\n/g,'<br>');
+  document.getElementById('outFromPhone').textContent = COMPANY.phone;
+  document.getElementById('outFromEmail').textContent = COMPANY.email;
 
   // To
   document.getElementById('outToName').textContent = document.getElementById('toName').value;
