@@ -377,13 +377,90 @@
     #invoice{border:none; box-shadow:none; width:100%;}
   }
   @media (max-width:900px){
-    .layout{flex-direction:column;}
-    .form-panel{position:static; max-height:none; flex:none; width:100%;}
-    .inv-body{padding:24px;}
-    .inv-header{flex-wrap:wrap; padding:20px;}
-    .inv-header-right h1{font-size:34px;}
-    .parties{flex-direction:column;}
+    body{padding:0; background:var(--paper);}
+    .layout{
+      flex-direction:column;
+      gap:0;
+      max-width:100%;
+      width:100%;
+    }
+    .form-panel{
+      position:static;
+      max-height:none;
+      flex:none;
+      width:100%;
+      border-radius:0;
+      box-shadow:none;
+      padding:16px;
+    }
+    .invoice-panel{
+      justify-content:stretch;
+      width:100%;
+    }
+    #invoice{
+      width:100%;
+      max-width:100%;
+      border-radius:0;
+      border-left:none;
+      border-right:none;
+      box-shadow:none;
+    }
+    .inv-body{padding:16px;}
+    .inv-header{
+      flex-wrap:wrap;
+      padding:16px;
+      gap:16px;
+    }
+    .inv-header .logo-wrap,
+    .inv-header img{
+      width:90px;
+      height:90px;
+    }
+    .inv-header-right h1{font-size:28px;}
+    .inv-meta-line{font-size:13px;}
+    .parties{flex-direction:column; gap:20px;}
     .bottom-grid{flex-direction:column;}
+    table.items td,
+    table.items thead th{
+      padding:10px 12px;
+      font-size:13px;
+    }
+    table.items td.amount-col{white-space:normal;}
+    .password-gate{padding:0;}
+    .password-card{
+      max-width:100%;
+      min-height:100vh;
+      border-radius:0;
+      border-left:none;
+      border-right:none;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+  }
+  @media (max-width:480px){
+    .form-panel{padding:14px 12px;}
+    .inv-body{padding:12px;}
+    .inv-header{padding:12px;}
+    .inv-header .logo-wrap,
+    .inv-header img{
+      width:72px;
+      height:72px;
+    }
+    .inv-header-right h1{font-size:24px; margin-bottom:8px;}
+    .inv-meta-line{
+      flex-direction:column;
+      gap:2px;
+      font-size:12px;
+    }
+    .row2{flex-direction:column; gap:0;}
+    .password-header{
+      flex-direction:column;
+      padding:20px 16px;
+      gap:12px;
+    }
+    .password-header h1{font-size:18px; text-align:center;}
+    .password-body{padding:20px 16px 24px;}
   }
 
   /* ---------- PASSWORD GATE ---------- */
