@@ -358,11 +358,49 @@
     font-weight:700;
     white-space:nowrap;
   }
-  table.items td.desc-col{line-height:1.6;}
-  table.items td.desc-col .extra-line{
+  table.items td.desc-col{line-height:1.45;}
+  table.items td.desc-col .extra-line,
+  table.items td.desc-col .info-line{
     display:block;
     font-weight:600;
-    margin-top:2px;
+    margin:0;
+    padding:0;
+    line-height:1.35;
+  }
+  table.items td.desc-col .info-terms{
+    margin-top:8px;
+  }
+  table.items td.info-summary{
+    line-height:1.35;
+    padding-top:10px;
+    padding-bottom:10px;
+  }
+  .avoid-break{
+    page-break-inside:avoid;
+    break-inside:avoid;
+  }
+  #invoice.pdf-export{
+    border:none;
+    border-radius:0;
+    box-shadow:none;
+    width:794px;
+    max-width:794px;
+  }
+  #invoice.pdf-export .inv-header{
+    padding:20px 28px;
+    margin:0;
+  }
+  #invoice.pdf-export .inv-body{
+    padding:18px 28px 24px;
+  }
+  #invoice.pdf-export .parties{
+    margin-bottom:16px;
+  }
+  #invoice.pdf-export .bottom-grid,
+  #invoice.pdf-export .thanks-box,
+  #invoice.pdf-export table.items{
+    page-break-inside:avoid;
+    break-inside:avoid;
   }
   .bottom-grid{
     display:flex;
@@ -440,7 +478,7 @@
 
   @media print{
     @page{
-      margin:12mm;
+      margin:0;
       size:A4;
     }
     html, body{
@@ -842,7 +880,7 @@ We truly appreciate your business and hope to work with you again in the future.
   <div class="invoice-panel">
     <div id="invoice">
 
-      <div class="inv-header">
+      <div class="inv-header avoid-break">
         <div class="logo-wrap">
           <img src="logo.png" alt="Double Glazing Expert Logo">
         </div>
@@ -856,7 +894,7 @@ We truly appreciate your business and hope to work with you again in the future.
 
       <div class="inv-body">
 
-      <div class="parties">
+      <div class="parties avoid-break">
         <div class="party">
           <h3>FROM:</h3>
           <p class="name" id="outFromName">Double Glazing Expert Limited</p>
@@ -883,7 +921,7 @@ We truly appreciate your business and hope to work with you again in the future.
         </tbody>
       </table>
 
-      <div class="bottom-grid">
+      <div class="bottom-grid avoid-break">
         <div class="notes-box">
           <h4>NOTES / TERMS</h4>
           <p id="outNotes"></p>
@@ -905,7 +943,7 @@ We truly appreciate your business and hope to work with you again in the future.
         </div>
       </div>
 
-      <div class="thanks-box" id="outThanks">
+      <div class="thanks-box avoid-break" id="outThanks">
         Thank you for giving us the opportunity to complete this job.<br>
         We truly appreciate your business and hope to work with you again in the future.
       </div>
@@ -1089,35 +1127,39 @@ function generateInvoice(){
   finalPay = finalPay === '' ? due : (parseFloat(finalPay) || 0);
 
   if(subtotal || serviceCharge || deposit || itemBlocks.length){
-    const infoLines = [];
+    const paymentLines = [];
     if(service.type === 'delivery'){
-      infoLines.push(`Delivery charges: ${fmtMoney(delivery)}.`);
-      if(service.date) infoLines.push(`${service.dateLabel}: ${fmtDate(service.date)}.`);
-      if(service.notes) infoLines.push(`${service.notesLabel}: ${escapeHtml(service.notes)}.`);
+      paymentLines.push(`Delivery charges: ${fmtMoney(delivery)}.`);
+      if(service.date) paymentLines.push(`${service.dateLabel}: ${fmtDate(service.date)}.`);
+      if(service.notes) paymentLines.push(`${service.notesLabel}: ${escapeHtml(service.notes)}.`);
     } else {
-      infoLines.push(`Collection charges: ${fmtMoney(collection)}.`);
-      if(service.date) infoLines.push(`${service.dateLabel}: ${fmtDate(service.date)}.`);
-      if(service.location) infoLines.push(`${service.locationLabel}: ${escapeHtml(service.location)}.`);
-      if(service.notes) infoLines.push(`${service.notesLabel}: ${escapeHtml(service.notes)}.`);
+      paymentLines.push(`Collection charges: ${fmtMoney(collection)}.`);
+      if(service.date) paymentLines.push(`${service.dateLabel}: ${fmtDate(service.date)}.`);
+      if(service.location) paymentLines.push(`${service.locationLabel}: ${escapeHtml(service.location)}.`);
+      if(service.notes) paymentLines.push(`${service.notesLabel}: ${escapeHtml(service.notes)}.`);
     }
-    infoLines.push(`Total amount discussed: ${fmtMoney(total)}.`);
-    infoLines.push(`Deposit paid: ${fmtMoney(deposit)}.`);
-    infoLines.push(`Due amount: ${fmtMoney(due)}.`);
-    infoLines.push(`Final pay: ${fmtMoney(finalPay)}.`);
-    infoLines.push('');
+    paymentLines.push(`Total amount discussed: ${fmtMoney(total)}.`);
+    paymentLines.push(`Deposit paid: ${fmtMoney(deposit)}.`);
+    paymentLines.push(`Due amount: ${fmtMoney(due)}.`);
+    paymentLines.push(`Final pay: ${fmtMoney(finalPay)}.`);
+
+    const termLines = [];
     if(service.type === 'delivery'){
-      infoLines.push('The remaining balance is due before delivery.');
-      infoLines.push('Once delivery is confirmed, payment is required immediately 1–2 days before delivery.');
-      infoLines.push('Do not pay the delivery man.');
+      termLines.push('The remaining balance is due before delivery.');
+      termLines.push('Once delivery is confirmed, payment is required immediately 1–2 days before delivery.');
+      termLines.push('Do not pay the delivery man.');
     } else {
-      infoLines.push('The remaining balance is due before collection.');
-      infoLines.push('Once collection is confirmed, payment is required immediately 1–2 days before collection.');
-      infoLines.push('Please collect only after payment is confirmed.');
+      termLines.push('The remaining balance is due before collection.');
+      termLines.push('Once collection is confirmed, payment is required immediately 1–2 days before collection.');
+      termLines.push('Please collect only after payment is confirmed.');
     }
-    infoLines.push('Payment must be made to our account.');
+    termLines.push('Payment must be made to our account.');
 
     const infoRow = document.createElement('tr');
-    infoRow.innerHTML = `<td class="desc-col">${infoLines.map(line => line ? `<span class="extra-line">${line}</span>` : '<br>').join('')}</td><td class="amount-col"></td>`;
+    infoRow.innerHTML = `<td class="desc-col info-summary">
+        ${paymentLines.map(line => `<div class="info-line">${line}</div>`).join('')}
+        <div class="info-terms">${termLines.map(line => `<div class="info-line">${line}</div>`).join('')}</div>
+      </td><td class="amount-col"></td>`;
     tbody.appendChild(infoRow);
   }
 
@@ -1155,9 +1197,11 @@ function downloadPDF(){
 
   btn.disabled = true;
   btn.textContent = 'Preparing PDF...';
+  invoice.classList.add('pdf-export');
+  invoice.scrollIntoView({ block: 'start' });
 
   const opt = {
-    margin: [8, 8, 8, 8],
+    margin: [0, 0, 0, 0],
     filename: filename,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: {
@@ -1165,16 +1209,21 @@ function downloadPDF(){
       useCORS: true,
       allowTaint: true,
       backgroundColor: '#ffffff',
-      logging: false
+      logging: false,
+      scrollX: 0,
+      scrollY: -window.scrollY,
+      windowWidth: invoice.scrollWidth
     },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+    pagebreak: { mode: ['css', 'legacy'], avoid: ['.avoid-break', 'tr'] }
   };
 
   html2pdf().set(opt).from(invoice).save().then(function(){
+    invoice.classList.remove('pdf-export');
     btn.disabled = false;
     btn.textContent = 'Download PDF';
   }).catch(function(){
+    invoice.classList.remove('pdf-export');
     btn.disabled = false;
     btn.textContent = 'Download PDF';
     alert('Could not create PDF. Please try again.');
