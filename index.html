@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Invoice">
 <title>Invoice</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="logo.png">
+<link rel="icon" href="logo.png">
 <style>
   :root{
     --gold:#e8a33d;
@@ -19,14 +23,14 @@
   *{box-sizing:border-box;}
   body{
     margin:0;
-    font-family:'Figtree', Arial, sans-serif;
+    font-family:'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
     background:#e9e9e9;
     color:var(--grey-text);
     padding:24px;
     overflow-x:hidden;
   }
   h1, h2, h3, h4{
-    font-family:'Sora', 'Segoe UI', Arial, sans-serif;
+    font-family:'Segoe UI Semibold', 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
   }
   /* Thin gold scrollbars */
   *{
@@ -70,14 +74,14 @@
   .form-panel h2{
     margin-top:0;
     font-size:20px;
-    font-family:'Sora', sans-serif;
+    font-family:'Segoe UI Semibold', 'Segoe UI', system-ui, Arial, sans-serif;
     color:var(--black);
     border-bottom:3px solid var(--gold);
     padding-bottom:10px;
   }
   .form-panel h3{
     font-size:13px;
-    font-family:'Sora', sans-serif;
+    font-family:'Segoe UI Semibold', 'Segoe UI', system-ui, Arial, sans-serif;
     text-transform:uppercase;
     letter-spacing:0.5px;
     color:var(--gold-dark);
@@ -99,7 +103,7 @@
     border:1px solid #ccc;
     border-radius:6px;
     font-size:13.5px;
-    font-family:'Figtree', inherit;
+    font-family:inherit;
     background:#fff;
   }
   input:focus, textarea:focus{
@@ -146,7 +150,7 @@
     border-radius:6px;
     border:none;
     font-size:13px;
-    font-family:'Sora', sans-serif;
+    font-family:'Segoe UI Semibold', 'Segoe UI', system-ui, Arial, sans-serif;
     font-weight:600;
     cursor:pointer;
   }
@@ -243,7 +247,7 @@
   .inv-header-right h1{
     font-size:44px;
     margin:0 0 12px;
-    font-family:'Sora', sans-serif;
+    font-family:'Segoe UI Semibold', 'Segoe UI', system-ui, Arial, sans-serif;
     color:var(--gold);
     letter-spacing:1px;
     font-weight:800;
@@ -273,7 +277,7 @@
   .party h3{
     color:var(--gold-dark);
     font-size:16px;
-    font-family:'Sora', sans-serif;
+    font-family:'Segoe UI Semibold', 'Segoe UI', system-ui, Arial, sans-serif;
     font-weight:700;
     letter-spacing:0.5px;
     margin:0 0 10px;
@@ -295,7 +299,7 @@
     text-align:left;
     padding:10px 16px;
     font-size:14px;
-    font-family:'Sora', sans-serif;
+    font-family:'Segoe UI Semibold', 'Segoe UI', system-ui, Arial, sans-serif;
     letter-spacing:0.5px;
   }
   table.items thead th.amount-col{text-align:right;}
@@ -328,7 +332,7 @@
   .notes-box h4, .bank-box h4{
     color:var(--gold-dark);
     font-size:13.5px;
-    font-family:'Sora', sans-serif;
+    font-family:'Segoe UI Semibold', 'Segoe UI', system-ui, Arial, sans-serif;
     font-weight:700;
     letter-spacing:0.5px;
     margin:0 0 8px;
@@ -361,7 +365,7 @@
     color:var(--gold);
     padding:8px 14px;
     font-size:13.5px;
-    font-family:'Sora', sans-serif;
+    font-family:'Segoe UI Semibold', 'Segoe UI', system-ui, Arial, sans-serif;
     letter-spacing:0.5px;
     font-weight:700;
   }
@@ -603,7 +607,7 @@
     border:1px solid #ccc;
     border-radius:6px;
     font-size:14px;
-    font-family:'Figtree', inherit;
+    font-family:inherit;
     margin-bottom:12px;
   }
   .password-body input[type=password]:focus{
@@ -646,7 +650,7 @@
       color:#fff;
       padding:12px 16px;
       border-bottom:2px solid #fff;
-      font-family:'Sora', sans-serif;
+      font-family:'Segoe UI Semibold', 'Segoe UI', system-ui, Arial, sans-serif;
       font-weight:700;
       font-size:15px;
       letter-spacing:0.6px;
@@ -836,7 +840,7 @@ We truly appreciate your business and hope to work with you again in the future.
 
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="js/html2pdf.bundle.min.js"></script>
 <script>
 const ACCESS_PASSWORD = 'ghulammustafa56@';
 const AUTH_KEY = 'dge_invoice_auth';
@@ -1043,6 +1047,12 @@ function initApp(){
 }
 
 checkAuth();
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('./sw.js').catch(function(){});
+  });
+}
 </script>
 
 </body>
