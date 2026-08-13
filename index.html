@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Double Glazing Expert - Invoice Generator</title>
+<title>Invoice</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -208,6 +208,9 @@
     gap:28px;
     background:var(--black);
     padding:30px 45px;
+    border-bottom:3px solid #fff;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
   }
   .inv-header .logo-wrap{
     width:130px;
@@ -244,8 +247,9 @@
   .inv-meta-line{
     display:flex;
     justify-content:space-between;
-    border-top:1px solid rgba(232,163,61,0.4);
-    padding:8px 0;
+    gap:16px;
+    border-top:none;
+    padding:4px 0;
     font-size:14px;
     color:#f0f0f0;
   }
@@ -269,8 +273,8 @@
     font-weight:700;
     letter-spacing:0.5px;
     margin:0 0 10px;
-    padding-bottom:6px;
-    border-bottom:2px solid var(--gold);
+    padding-bottom:0;
+    border-bottom:none;
   }
   .party p{margin:3px 0; font-size:14px; line-height:1.5;}
   .party p.name{font-weight:700; color:var(--black); font-size:15px;}
@@ -324,8 +328,8 @@
     font-weight:700;
     letter-spacing:0.5px;
     margin:0 0 8px;
-    padding-bottom:5px;
-    border-bottom:2px solid var(--gold);
+    padding-bottom:0;
+    border-bottom:none;
   }
   .notes-box p{
     font-size:12px;
@@ -383,10 +387,74 @@
   .thanks-box .heart{color:var(--gold-dark);}
 
   @media print{
-    body{background:#fff; padding:0;}
-    .form-panel, .btn-print{display:none !important;}
-    .layout{display:block;}
-    #invoice{border:none; box-shadow:none; width:100%;}
+    @page{
+      margin:12mm;
+      size:A4;
+    }
+    html, body{
+      background:#fff !important;
+      padding:0 !important;
+      margin:0 !important;
+      -webkit-print-color-adjust:exact !important;
+      print-color-adjust:exact !important;
+      color-adjust:exact !important;
+    }
+    .password-gate,
+    .form-panel,
+    .btn-print,
+    .mobile-sticky-bar,
+    .btn-add,
+    .remove-item{
+      display:none !important;
+    }
+    .app-content{display:block !important;}
+    .layout{display:block; max-width:100%; gap:0;}
+    .invoice-panel{display:block; width:100%;}
+    #invoice{
+      border:none !important;
+      box-shadow:none !important;
+      border-radius:0 !important;
+      width:100% !important;
+      max-width:100% !important;
+      -webkit-print-color-adjust:exact !important;
+      print-color-adjust:exact !important;
+    }
+    .inv-header{
+      background:#111111 !important;
+      -webkit-print-color-adjust:exact !important;
+      print-color-adjust:exact !important;
+      border-bottom:3px solid #fff !important;
+      padding:22px 28px !important;
+      break-inside:avoid;
+    }
+    .inv-header-right h1{color:#e8a33d !important;}
+    .inv-meta-line{color:#f0f0f0 !important;}
+    .inv-meta-line strong{color:#e8a33d !important;}
+    .inv-divider-v{background:#e8a33d !important;}
+    .hr-full{display:none !important;}
+    .party h3,
+    .notes-box h4,
+    .bank-box h4{
+      border-bottom:none !important;
+    }
+    .inv-meta-line{
+      border-top:none !important;
+      padding:4px 0 !important;
+    }
+    table.items thead th,
+    .summary-box .sum-title{
+      background:#111111 !important;
+      color:#e8a33d !important;
+      -webkit-print-color-adjust:exact !important;
+      print-color-adjust:exact !important;
+    }
+    .summary-box .sum-row.balance{
+      background:#e8a33d !important;
+      color:#111 !important;
+      -webkit-print-color-adjust:exact !important;
+      print-color-adjust:exact !important;
+    }
+    .inv-body{padding:24px 28px 28px !important;}
   }
   @media (max-width:900px){
     body{padding:0; background:var(--paper);}
@@ -631,7 +699,7 @@
     <div class="row2">
       <div>
         <label>Invoice Number</label>
-        <input type="text" id="invNumber" value="1003">
+        <input type="text" id="invNumber" value="" placeholder="e.g. 1003">
       </div>
       <div>
         <label>Invoice Date</label>
@@ -649,13 +717,11 @@
 
     <h3>To (Customer)</h3>
     <label>Customer Name</label>
-    <input type="text" id="toName" value="Christopher Knott">
+    <input type="text" id="toName" value="" placeholder="Customer name">
     <label>Address</label>
-    <textarea id="toAddress">38 Neville Close
-Leytonstone
-E11 3QH</textarea>
+    <textarea id="toAddress" placeholder="Customer address"></textarea>
     <label>Phone</label>
-    <input type="text" id="toPhone" value="07590 649331">
+    <input type="text" id="toPhone" value="" placeholder="Customer phone">
 
     <h3>Job / Items</h3>
     <div id="itemsContainer"></div>
@@ -663,9 +729,9 @@ E11 3QH</textarea>
 
     <h3>Extra Charges &amp; Payment Info</h3>
     <label>Delivery Charges (£)</label>
-    <input type="number" id="deliveryCharge" value="80" step="0.01">
+    <input type="number" id="deliveryCharge" value="" step="0.01" placeholder="0.00">
     <label>Deposit Paid (£)</label>
-    <input type="number" id="depositPaid" value="1330" step="0.01">
+    <input type="number" id="depositPaid" value="" step="0.01" placeholder="0.00">
     <div class="financials-note">Subtotal is auto-calculated from item amounts. Balance Due = Subtotal − Deposit Paid.</div>
 
     <h3>Notes / Terms</h3>
@@ -686,7 +752,7 @@ Payment must be made directly to our account.</textarea>
     <textarea id="thankYouText" style="min-height:50px;">Thank you for giving us the opportunity to complete this job.
 We truly appreciate your business and hope to work with you again in the future.</textarea>
 
-    <button type="button" class="btn btn-print" onclick="window.print()">Print / Save as PDF</button>
+    <button type="button" class="btn btn-print" id="printBtn">Print / Save as PDF</button>
   </div>
 
   <!-- ============ INVOICE PANEL ============ -->
@@ -700,14 +766,12 @@ We truly appreciate your business and hope to work with you again in the future.
         <div class="inv-divider-v"></div>
         <div class="inv-header-right">
           <h1>INVOICE</h1>
-          <div class="inv-meta-line"><strong>Invoice Number:</strong><span id="outInvNumber">1003</span></div>
-          <div class="inv-meta-line"><strong>Invoice Date:</strong><span id="outInvDate">01 August 2026</span></div>
+          <div class="inv-meta-line"><strong>Invoice Number:</strong><span id="outInvNumber"></span></div>
+          <div class="inv-meta-line"><strong>Invoice Date:</strong><span id="outInvDate"></span></div>
         </div>
       </div>
 
       <div class="inv-body">
-
-      <hr class="hr-full">
 
       <div class="parties">
         <div class="party">
@@ -719,9 +783,9 @@ We truly appreciate your business and hope to work with you again in the future.
         </div>
         <div class="party">
           <h3>TO:</h3>
-          <p class="name" id="outToName">Christopher Knott</p>
-          <p id="outToAddress">38 Neville Close<br>Leytonstone<br>E11 3QH</p>
-          <p><strong>Phone:</strong> <span id="outToPhone">07590 649331</span></p>
+          <p class="name" id="outToName"></p>
+          <p id="outToAddress"></p>
+          <p id="outToPhoneWrap"><strong>Phone:</strong> <span id="outToPhone"></span></p>
         </div>
       </div>
 
@@ -810,18 +874,18 @@ function checkAuth(){
 
 let itemCount = 0;
 
-function addItem(desc = "One aluminium French door with side two panels, white colour, supply only.", amount = 2580){
+function addItem(desc = "", amount = ""){
   itemCount++;
   const id = itemCount;
   const div = document.createElement('div');
   div.className = 'item-block';
   div.id = 'item-' + id;
   div.innerHTML = `
-    <button type="button" class="remove-item" onclick="removeItem(${id})">&times; remove</button>
+    <button type="button" class="remove-item" onclick="removeItem(${id})">Remove</button>
     <label>Description</label>
-    <textarea id="itemDesc-${id}">${desc}</textarea>
+    <textarea id="itemDesc-${id}" placeholder="Item description">${desc}</textarea>
     <label>Amount (£)</label>
-    <input type="number" id="itemAmount-${id}" value="${amount}" step="0.01">
+    <input type="number" id="itemAmount-${id}" value="${amount}" step="0.01" placeholder="0.00">
   `;
   document.getElementById('itemsContainer').appendChild(div);
   generateInvoice();
@@ -844,11 +908,19 @@ function fmtDate(dateStr){
   return d.getDate().toString().padStart(2,'0') + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
 }
 
+function escapeHtml(str){
+  return String(str || '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
 function generateInvoice(){
   // Meta
   document.getElementById('outInvNumber').textContent = document.getElementById('invNumber').value;
   const dateVal = document.getElementById('invDate').value;
-  document.getElementById('outInvDate').textContent = dateVal ? fmtDate(dateVal) : '01 August 2026';
+  document.getElementById('outInvDate').textContent = dateVal ? fmtDate(dateVal) : '';
 
   // From
   document.getElementById('outFromName').textContent = COMPANY.name;
@@ -857,9 +929,13 @@ function generateInvoice(){
   document.getElementById('outFromEmail').textContent = COMPANY.email;
 
   // To
-  document.getElementById('outToName').textContent = document.getElementById('toName').value;
-  document.getElementById('outToAddress').innerHTML = document.getElementById('toAddress').value.replace(/\n/g,'<br>');
-  document.getElementById('outToPhone').textContent = document.getElementById('toPhone').value;
+  const toName = document.getElementById('toName').value.trim();
+  const toAddress = document.getElementById('toAddress').value.trim();
+  const toPhone = document.getElementById('toPhone').value.trim();
+  document.getElementById('outToName').textContent = toName;
+  document.getElementById('outToAddress').innerHTML = escapeHtml(toAddress).replace(/\n/g,'<br>');
+  document.getElementById('outToPhone').textContent = toPhone;
+  document.getElementById('outToPhoneWrap').style.display = toPhone ? '' : 'none';
 
   // Items
   const tbody = document.getElementById('itemsTableBody');
@@ -868,33 +944,35 @@ function generateInvoice(){
   const itemBlocks = document.querySelectorAll('.item-block');
   itemBlocks.forEach(block => {
     const id = block.id.split('-')[1];
-    const desc = document.getElementById('itemDesc-' + id).value;
+    const desc = document.getElementById('itemDesc-' + id).value.replace(/\*/g,'').trim();
     const amt = parseFloat(document.getElementById('itemAmount-' + id).value) || 0;
     subtotal += amt;
+    if(!desc && !amt) return;
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td class="desc-col">${desc.replace(/\n/g,'<br>')}</td><td class="amount-col">${fmtMoney(amt)}</td>`;
+    tr.innerHTML = `<td class="desc-col">${escapeHtml(desc).replace(/\n/g,'<br>')}</td><td class="amount-col">${amt ? fmtMoney(amt) : ''}</td>`;
     tbody.appendChild(tr);
   });
 
   const delivery = parseFloat(document.getElementById('deliveryCharge').value) || 0;
   const deposit = parseFloat(document.getElementById('depositPaid').value) || 0;
 
-  // Add a footer row inside the last cell area for delivery/total/deposit breakdown (matches template's style)
-  const infoRow = document.createElement('tr');
-  infoRow.innerHTML = `<td class="desc-col">
-      <span class="extra-line">Delivery charges: ${fmtMoney(delivery)}.</span>
-      <span class="extra-line">Total amount discussed: ${fmtMoney(subtotal)}.</span>
-      <span class="extra-line">Deposit paid: ${fmtMoney(deposit)}.</span>
-      <br>
-      <span class="extra-line">The remaining balance is due before delivery.</span>
-      <span class="extra-line">Once delivery is confirmed, payment is required immediately 1–2 days before delivery.</span>
-      <span class="extra-line">Do not pay the delivery man.</span>
-      <span class="extra-line">Payment must be made to our account.</span>
-    </td><td class="amount-col"></td>`;
-  tbody.appendChild(infoRow);
+  if(subtotal || delivery || deposit || itemBlocks.length){
+    const infoRow = document.createElement('tr');
+    infoRow.innerHTML = `<td class="desc-col">
+        <span class="extra-line">Delivery charges: ${fmtMoney(delivery)}.</span>
+        <span class="extra-line">Total amount discussed: ${fmtMoney(subtotal)}.</span>
+        <span class="extra-line">Deposit paid: ${fmtMoney(deposit)}.</span>
+        <br>
+        <span class="extra-line">The remaining balance is due before delivery.</span>
+        <span class="extra-line">Once delivery is confirmed, payment is required immediately 1–2 days before delivery.</span>
+        <span class="extra-line">Do not pay the delivery man.</span>
+        <span class="extra-line">Payment must be made to our account.</span>
+      </td><td class="amount-col"></td>`;
+    tbody.appendChild(infoRow);
+  }
 
   // Notes
-  document.getElementById('outNotes').innerHTML = document.getElementById('notesText').value.replace(/\n/g,'<br>');
+  document.getElementById('outNotes').innerHTML = escapeHtml(document.getElementById('notesText').value).replace(/\n/g,'<br>');
 
   // Bank
   document.getElementById('outBankName').textContent = document.getElementById('bankName').value;
@@ -909,18 +987,29 @@ function generateInvoice(){
 
   // Thank you
   const thanksLines = document.getElementById('thankYouText').value.split('\n').filter(l=>l.trim()!=='');
-  document.getElementById('outThanks').innerHTML = thanksLines.join('<br>');
+  document.getElementById('outThanks').innerHTML = thanksLines.map(escapeHtml).join('<br>');
 }
 
 // Live update: listen for any input/change anywhere in the form panel
 document.querySelector('.form-panel').addEventListener('input', generateInvoice);
 document.querySelector('.form-panel').addEventListener('change', generateInvoice);
 
+function printInvoice(){
+  const prevTitle = document.title;
+  document.title = ' ';
+  window.addEventListener('afterprint', function restoreTitle(){
+    document.title = prevTitle;
+    window.removeEventListener('afterprint', restoreTitle);
+  });
+  window.print();
+}
+
 function initApp(){
   if(document.getElementById('appContent').dataset.initialized) return;
   document.getElementById('appContent').dataset.initialized = '1';
+  document.getElementById('printBtn').addEventListener('click', printInvoice);
   addItem();
-  document.getElementById('invDate').valueAsDate = new Date('2026-08-01');
+  document.getElementById('invDate').value = '';
   generateInvoice();
 }
 
