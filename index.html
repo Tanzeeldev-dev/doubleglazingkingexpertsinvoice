@@ -124,6 +124,50 @@
   .company-fixed p{margin:0 0 6px;}
   .company-fixed p:last-child{margin-bottom:0;}
   .company-fixed .company-name{font-weight:700; color:var(--black); font-size:14px;}
+  .option-toggle{
+    display:flex;
+    gap:10px;
+    margin:8px 0 12px;
+  }
+  .option-toggle label{
+    flex:1;
+    margin:0;
+    padding:10px 12px;
+    border:1.5px solid #ccc;
+    border-radius:8px;
+    text-align:center;
+    cursor:pointer;
+    font-size:13px;
+    font-weight:600;
+    background:#fff;
+    transition:all 0.15s ease;
+  }
+  .option-toggle input{display:none;}
+  .option-toggle input:checked + span{
+    display:block;
+  }
+  .option-toggle label:has(input:checked){
+    border-color:var(--gold);
+    background:#fff8ec;
+    color:var(--black);
+    box-shadow:0 0 0 2px rgba(232,163,61,0.2);
+  }
+  .service-options{
+    border:1px dashed var(--gold-dark);
+    border-radius:8px;
+    padding:12px;
+    margin-bottom:12px;
+    background:#fffdf8;
+  }
+  .service-options.hidden{display:none;}
+  .service-options h4{
+    margin:0 0 10px;
+    font-size:12px;
+    font-family:'Segoe UI Semibold', 'Segoe UI', system-ui, Arial, sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    color:var(--gold-dark);
+  }
   .row2{display:flex; gap:10px;}
   .row2 > div{flex:1;}
   .item-block{
@@ -736,11 +780,42 @@
     <button type="button" class="btn btn-add" onclick="addItem()">+ Add another item</button>
 
     <h3>Extra Charges &amp; Payment Info</h3>
-    <label>Delivery Charges (£)</label>
-    <input type="number" id="deliveryCharge" value="" step="0.01" placeholder="0.00">
+
+    <label>Service Type</label>
+    <div class="option-toggle">
+      <label><input type="radio" name="serviceType" id="serviceDelivery" value="delivery" checked><span>Delivery</span></label>
+      <label><input type="radio" name="serviceType" id="serviceCollection" value="collection"><span>Collection</span></label>
+    </div>
+
+    <div class="service-options" id="deliveryOptions">
+      <h4>Delivery Options</h4>
+      <label>Delivery Charges (£)</label>
+      <input type="number" id="deliveryCharge" value="" step="0.01" placeholder="0.00">
+      <label>Delivery Date</label>
+      <input type="date" id="deliveryDate">
+      <label>Delivery Notes</label>
+      <textarea id="deliveryNotes" placeholder="Delivery instructions, access details, etc."></textarea>
+    </div>
+
+    <div class="service-options hidden" id="collectionOptions">
+      <h4>Collection Options</h4>
+      <label>Collection Charges (£)</label>
+      <input type="number" id="collectionCharge" value="" step="0.01" placeholder="0.00">
+      <label>Collection Date</label>
+      <input type="date" id="collectionDate">
+      <label>Collection Location</label>
+      <input type="text" id="collectionLocation" placeholder="Where customer will collect from">
+      <label>Collection Notes</label>
+      <textarea id="collectionNotes" placeholder="Collection instructions, opening times, etc."></textarea>
+    </div>
+
     <label>Deposit Paid (£)</label>
     <input type="number" id="depositPaid" value="" step="0.01" placeholder="0.00">
-    <div class="financials-note">Subtotal is auto-calculated from item amounts. Balance Due = Subtotal − Deposit Paid.</div>
+    <label>Due Amount (£)</label>
+    <input type="number" id="dueAmount" value="" step="0.01" placeholder="Auto-calculated if left blank">
+    <label>Final Pay (£)</label>
+    <input type="number" id="finalPay" value="" step="0.01" placeholder="Auto-calculated if left blank">
+    <div class="financials-note">Subtotal is auto-calculated from item amounts. Due and Final Pay auto-fill from total minus deposit unless you enter them manually.</div>
 
     <h3>Notes / Terms</h3>
     <textarea id="notesText" style="min-height:90px;">The remaining balance is due before delivery.
@@ -821,9 +896,12 @@ We truly appreciate your business and hope to work with you again in the future.
         </div>
         <div class="summary-box">
           <div class="sum-title">FINANCIAL SUMMARY</div>
-          <div class="sum-row"><span>Subtotal / Total</span><span id="outSubtotal">£0.00</span></div>
+          <div class="sum-row"><span>Subtotal</span><span id="outSubtotal">£0.00</span></div>
+          <div class="sum-row"><span id="outServiceLabel">Delivery Charge</span><span id="outServiceCharge">£0.00</span></div>
+          <div class="sum-row"><span>Total</span><span id="outTotal">£0.00</span></div>
           <div class="sum-row"><span>Deposit Paid</span><span id="outDeposit">£0.00</span></div>
-          <div class="sum-row balance"><span>BALANCE DUE</span><span id="outBalance">£0.00</span></div>
+          <div class="sum-row"><span>Due Amount</span><span id="outDue">£0.00</span></div>
+          <div class="sum-row balance"><span>FINAL PAY</span><span id="outFinalPay">£0.00</span></div>
         </div>
       </div>
 
@@ -925,6 +1003,41 @@ function escapeHtml(str){
     .replace(/"/g,'&quot;');
 }
 
+function toggleServiceOptions(){
+  const isDelivery = document.getElementById('serviceDelivery').checked;
+  document.getElementById('deliveryOptions').classList.toggle('hidden', !isDelivery);
+  document.getElementById('collectionOptions').classList.toggle('hidden', isDelivery);
+  generateInvoice();
+}
+
+function getServiceDetails(){
+  const isDelivery = document.getElementById('serviceDelivery').checked;
+  if(isDelivery){
+    return {
+      type: 'delivery',
+      label: 'Delivery Charge',
+      charge: parseFloat(document.getElementById('deliveryCharge').value) || 0,
+      date: document.getElementById('deliveryDate').value,
+      dateLabel: 'Delivery Date',
+      notes: document.getElementById('deliveryNotes').value.trim(),
+      notesLabel: 'Delivery Notes',
+      location: '',
+      locationLabel: 'Delivery Address'
+    };
+  }
+  return {
+    type: 'collection',
+    label: 'Collection Charge',
+    charge: parseFloat(document.getElementById('collectionCharge').value) || 0,
+    date: document.getElementById('collectionDate').value,
+    dateLabel: 'Collection Date',
+    notes: document.getElementById('collectionNotes').value.trim(),
+    notesLabel: 'Collection Notes',
+    location: document.getElementById('collectionLocation').value.trim(),
+    locationLabel: 'Collection Location'
+  };
+}
+
 function generateInvoice(){
   // Meta
   document.getElementById('outInvNumber').textContent = document.getElementById('invNumber').value;
@@ -962,21 +1075,49 @@ function generateInvoice(){
     tbody.appendChild(tr);
   });
 
-  const delivery = parseFloat(document.getElementById('deliveryCharge').value) || 0;
+  const service = getServiceDetails();
+  const delivery = service.type === 'delivery' ? service.charge : 0;
+  const collection = service.type === 'collection' ? service.charge : 0;
+  const serviceCharge = service.charge;
   const deposit = parseFloat(document.getElementById('depositPaid').value) || 0;
+  const total = subtotal + serviceCharge;
+  const autoRemaining = Math.max(total - deposit, 0);
 
-  if(subtotal || delivery || deposit || itemBlocks.length){
+  let due = document.getElementById('dueAmount').value.trim();
+  let finalPay = document.getElementById('finalPay').value.trim();
+  due = due === '' ? autoRemaining : (parseFloat(due) || 0);
+  finalPay = finalPay === '' ? due : (parseFloat(finalPay) || 0);
+
+  if(subtotal || serviceCharge || deposit || itemBlocks.length){
+    const infoLines = [];
+    if(service.type === 'delivery'){
+      infoLines.push(`Delivery charges: ${fmtMoney(delivery)}.`);
+      if(service.date) infoLines.push(`${service.dateLabel}: ${fmtDate(service.date)}.`);
+      if(service.notes) infoLines.push(`${service.notesLabel}: ${escapeHtml(service.notes)}.`);
+    } else {
+      infoLines.push(`Collection charges: ${fmtMoney(collection)}.`);
+      if(service.date) infoLines.push(`${service.dateLabel}: ${fmtDate(service.date)}.`);
+      if(service.location) infoLines.push(`${service.locationLabel}: ${escapeHtml(service.location)}.`);
+      if(service.notes) infoLines.push(`${service.notesLabel}: ${escapeHtml(service.notes)}.`);
+    }
+    infoLines.push(`Total amount discussed: ${fmtMoney(total)}.`);
+    infoLines.push(`Deposit paid: ${fmtMoney(deposit)}.`);
+    infoLines.push(`Due amount: ${fmtMoney(due)}.`);
+    infoLines.push(`Final pay: ${fmtMoney(finalPay)}.`);
+    infoLines.push('');
+    if(service.type === 'delivery'){
+      infoLines.push('The remaining balance is due before delivery.');
+      infoLines.push('Once delivery is confirmed, payment is required immediately 1–2 days before delivery.');
+      infoLines.push('Do not pay the delivery man.');
+    } else {
+      infoLines.push('The remaining balance is due before collection.');
+      infoLines.push('Once collection is confirmed, payment is required immediately 1–2 days before collection.');
+      infoLines.push('Please collect only after payment is confirmed.');
+    }
+    infoLines.push('Payment must be made to our account.');
+
     const infoRow = document.createElement('tr');
-    infoRow.innerHTML = `<td class="desc-col">
-        <span class="extra-line">Delivery charges: ${fmtMoney(delivery)}.</span>
-        <span class="extra-line">Total amount discussed: ${fmtMoney(subtotal)}.</span>
-        <span class="extra-line">Deposit paid: ${fmtMoney(deposit)}.</span>
-        <br>
-        <span class="extra-line">The remaining balance is due before delivery.</span>
-        <span class="extra-line">Once delivery is confirmed, payment is required immediately 1–2 days before delivery.</span>
-        <span class="extra-line">Do not pay the delivery man.</span>
-        <span class="extra-line">Payment must be made to our account.</span>
-      </td><td class="amount-col"></td>`;
+    infoRow.innerHTML = `<td class="desc-col">${infoLines.map(line => line ? `<span class="extra-line">${line}</span>` : '<br>').join('')}</td><td class="amount-col"></td>`;
     tbody.appendChild(infoRow);
   }
 
@@ -989,10 +1130,13 @@ function generateInvoice(){
   document.getElementById('outAccountNumber').textContent = document.getElementById('accountNumber').value;
 
   // Financial summary
-  const balance = subtotal - deposit;
   document.getElementById('outSubtotal').textContent = fmtMoney(subtotal);
+  document.getElementById('outServiceLabel').textContent = service.label;
+  document.getElementById('outServiceCharge').textContent = fmtMoney(serviceCharge);
+  document.getElementById('outTotal').textContent = fmtMoney(total);
   document.getElementById('outDeposit').textContent = fmtMoney(deposit);
-  document.getElementById('outBalance').textContent = fmtMoney(balance);
+  document.getElementById('outDue').textContent = fmtMoney(due);
+  document.getElementById('outFinalPay').textContent = fmtMoney(finalPay);
 
   // Thank you
   const thanksLines = document.getElementById('thankYouText').value.split('\n').filter(l=>l.trim()!=='');
@@ -1041,6 +1185,9 @@ function initApp(){
   if(document.getElementById('appContent').dataset.initialized) return;
   document.getElementById('appContent').dataset.initialized = '1';
   document.getElementById('printBtn').addEventListener('click', downloadPDF);
+  document.getElementById('serviceDelivery').addEventListener('change', toggleServiceOptions);
+  document.getElementById('serviceCollection').addEventListener('change', toggleServiceOptions);
+  toggleServiceOptions();
   addItem();
   document.getElementById('invDate').value = '';
   generateInvoice();
