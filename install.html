@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Invoice">
+<title>Download Invoice App</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+<style>
+  :root{
+    --gold:#e8a33d;
+    --gold-dark:#c98a2e;
+    --black:#111111;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    font-family:'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+    background:
+      radial-gradient(ellipse at top, #2a2a2a 0%, #111 55%),
+      #111;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px 16px;
+  }
+  .card{
+    width:100%;
+    max-width:420px;
+    text-align:center;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(232,163,61,0.45);
+    border-radius:18px;
+    padding:36px 24px 28px;
+    box-shadow:0 18px 50px rgba(0,0,0,0.45);
+  }
+  .logo{
+    width:140px;
+    height:140px;
+    object-fit:contain;
+    display:block;
+    margin:0 auto 18px;
+    filter:drop-shadow(0 8px 18px rgba(0,0,0,0.5));
+  }
+  h1{
+    margin:0 0 8px;
+    font-size:24px;
+    color:var(--gold);
+    letter-spacing:0.4px;
+  }
+  p{
+    margin:0 0 22px;
+    color:#d7d7d7;
+    font-size:14.5px;
+    line-height:1.55;
+  }
+  .btn{
+    display:block;
+    width:100%;
+    text-decoration:none;
+    border:none;
+    border-radius:10px;
+    padding:14px 16px;
+    font-size:15px;
+    font-weight:700;
+    font-family:inherit;
+    cursor:pointer;
+    margin-bottom:12px;
+  }
+  .btn-primary{
+    background:var(--gold);
+    color:#111;
+  }
+  .btn-primary:hover{background:var(--gold-dark); color:#fff;}
+  .btn-secondary{
+    background:#fff;
+    color:#111;
+  }
+  .btn-ghost{
+    background:transparent;
+    color:var(--gold);
+    border:1.5px solid var(--gold);
+  }
+  .note{
+    margin-top:14px;
+    font-size:12px;
+    color:#9a9a9a;
+    line-height:1.5;
+  }
+  .note strong{color:#ccc;}
+</style>
+</head>
+<body>
+  <div class="card">
+    <img class="logo" src="logo.png" alt="Double Glazing Expert Logo">
+    <h1>Invoice App</h1>
+    <p>Double Glazing Expert Limited<br>Download or install the invoice generator on your phone.</p>
+
+    <a class="btn btn-primary" href="Double-Glazing-Expert-Invoice-App.zip" download>
+      Download Offline App (ZIP)
+    </a>
+
+    <button class="btn btn-secondary" id="installBtn" type="button">
+      Install on This Phone
+    </button>
+
+    <a class="btn btn-ghost" href="./">
+      Open Invoice Generator
+    </a>
+
+    <div class="note">
+      <strong>Android:</strong> tap Install, or Chrome menu → Add to Home screen.<br>
+      <strong>iPhone:</strong> Safari Share → Add to Home Screen.<br>
+      <strong>ZIP:</strong> unzip and open <em>index.html</em> anytime offline.
+    </div>
+  </div>
+
+<script>
+let deferredPrompt = null;
+const installBtn = document.getElementById('installBtn');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.textContent = 'Install on This Phone';
+});
+
+installBtn.addEventListener('click', async () => {
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    return;
+  }
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  if(isIOS){
+    alert('On iPhone: tap Share, then “Add to Home Screen”.');
+  } else {
+    alert('In Chrome: open the menu (⋮) and tap “Install app” or “Add to Home screen”.');
+  }
+});
+
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js').catch(function(){});
+}
+</script>
+</body>
+</html>
