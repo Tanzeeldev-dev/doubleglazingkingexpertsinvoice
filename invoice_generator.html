@@ -177,6 +177,10 @@
     margin-top:10px;
   }
   .btn-print:hover{background:var(--gold-dark); color:#fff;}
+  .btn-print:disabled{
+    opacity:0.7;
+    cursor:wait;
+  }
   .financials-note{
     font-size:11.5px;
     color:#777;
@@ -752,7 +756,7 @@ Payment must be made directly to our account.</textarea>
     <textarea id="thankYouText" style="min-height:50px;">Thank you for giving us the opportunity to complete this job.
 We truly appreciate your business and hope to work with you again in the future.</textarea>
 
-    <button type="button" class="btn btn-print" id="printBtn">Print / Save as PDF</button>
+    <button type="button" class="btn btn-print" id="printBtn">Download PDF</button>
   </div>
 
   <!-- ============ INVOICE PANEL ============ -->
@@ -832,6 +836,7 @@ We truly appreciate your business and hope to work with you again in the future.
 
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
 const ACCESS_PASSWORD = 'ghulammustafa56@';
 const AUTH_KEY = 'dge_invoice_auth';
@@ -994,20 +999,44 @@ function generateInvoice(){
 document.querySelector('.form-panel').addEventListener('input', generateInvoice);
 document.querySelector('.form-panel').addEventListener('change', generateInvoice);
 
-function printInvoice(){
-  const prevTitle = document.title;
-  document.title = ' ';
-  window.addEventListener('afterprint', function restoreTitle(){
-    document.title = prevTitle;
-    window.removeEventListener('afterprint', restoreTitle);
+function downloadPDF(){
+  const btn = document.getElementById('printBtn');
+  const invoice = document.getElementById('invoice');
+  const invNo = (document.getElementById('invNumber').value || '').trim();
+  const filename = invNo ? ('Invoice-' + invNo + '.pdf') : 'Invoice.pdf';
+
+  btn.disabled = true;
+  btn.textContent = 'Preparing PDF...';
+
+  const opt = {
+    margin: [8, 8, 8, 8],
+    filename: filename,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#ffffff',
+      logging: false
+    },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+  };
+
+  html2pdf().set(opt).from(invoice).save().then(function(){
+    btn.disabled = false;
+    btn.textContent = 'Download PDF';
+  }).catch(function(){
+    btn.disabled = false;
+    btn.textContent = 'Download PDF';
+    alert('Could not create PDF. Please try again.');
   });
-  window.print();
 }
 
 function initApp(){
   if(document.getElementById('appContent').dataset.initialized) return;
   document.getElementById('appContent').dataset.initialized = '1';
-  document.getElementById('printBtn').addEventListener('click', printInvoice);
+  document.getElementById('printBtn').addEventListener('click', downloadPDF);
   addItem();
   document.getElementById('invDate').value = '';
   generateInvoice();
