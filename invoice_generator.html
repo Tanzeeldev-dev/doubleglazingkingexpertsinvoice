@@ -318,45 +318,92 @@
     margin-bottom:24px;
   }
   .party{flex:1;}
+  .party-box{
+    background:linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+    border-left:4px solid var(--gold);
+    padding:14px 18px;
+    border-radius:0 8px 8px 0;
+    min-height:100%;
+  }
   .party h3{
     color:var(--gold-dark);
-    font-size:16px;
+    font-size:13px;
     font-family:'Segoe UI Semibold', 'Segoe UI', system-ui, Arial, sans-serif;
     font-weight:700;
-    letter-spacing:0.5px;
+    letter-spacing:1px;
     margin:0 0 10px;
-    padding-bottom:0;
-    border-bottom:none;
+    padding-bottom:6px;
+    border-bottom:1px solid rgba(232,163,61,0.35);
   }
-  .party p{margin:3px 0; font-size:14px; line-height:1.5;}
-  .party p.name{font-weight:700; color:var(--black); font-size:15px;}
+  .party p{margin:4px 0; font-size:13.5px; line-height:1.55; color:#333;}
+  .party p.name{font-weight:700; color:var(--black); font-size:15px; margin-bottom:6px;}
 
   table.items{
     width:100%;
     border-collapse:collapse;
     border:2px solid var(--gold);
     margin-bottom:0;
+    overflow:hidden;
   }
   table.items thead th{
     background:var(--black);
     color:var(--gold);
     text-align:left;
-    padding:10px 16px;
-    font-size:14px;
+    padding:12px 18px;
+    font-size:13px;
     font-family:'Segoe UI Semibold', 'Segoe UI', system-ui, Arial, sans-serif;
-    letter-spacing:0.5px;
+    letter-spacing:1px;
+    text-transform:uppercase;
   }
   table.items thead th.amount-col{text-align:right;}
   table.items td{
-    padding:14px 16px;
-    font-size:14px;
+    padding:12px 18px;
+    font-size:13.5px;
     vertical-align:top;
-    border-top:1px solid #f0e0c0;
+    border-top:1px solid #ead9b8;
+  }
+  table.items tbody tr.item-data:nth-child(even) td{
+    background:#fffdf8;
+  }
+  table.items tbody tr.pay-row td{
+    background:#f8f6f2;
+    font-weight:600;
+    padding:9px 18px;
+    font-size:13px;
+  }
+  table.items tbody tr.pay-row.total td{
+    background:#111;
+    color:#fff;
+    border-top:2px solid var(--gold);
+  }
+  table.items tbody tr.pay-row.total td.amount-col{
+    color:var(--gold);
+    font-size:14px;
+  }
+  table.items tbody tr.pay-row.highlight td{
+    background:#fff8ec;
+  }
+  table.items tbody tr.pay-row.meta td{
+    background:#fff;
+    font-weight:500;
+    font-size:12.5px;
+    color:#555;
+    font-style:italic;
+  }
+  table.items tbody tr.terms-row td{
+    background:#f5f5f5;
+    font-weight:400;
+    font-size:12px;
+    line-height:1.55;
+    color:#444;
+    padding:14px 18px;
+    border-top:2px solid var(--gold);
   }
   table.items td.amount-col{
     text-align:right;
     font-weight:700;
     white-space:nowrap;
+    width:130px;
   }
   table.items td.desc-col{line-height:1.45;}
   table.items td.desc-col .extra-line,
@@ -385,94 +432,127 @@
     box-shadow:none;
     width:794px;
     max-width:794px;
+    background:#fff;
+    font-family:'Segoe UI', system-ui, Arial, sans-serif;
   }
   #invoice.pdf-export .inv-header{
-    padding:20px 28px;
+    padding:22px 32px;
     margin:0;
+    background:linear-gradient(135deg, #111 0%, #1a1a1a 100%) !important;
+    border-bottom:4px solid var(--gold) !important;
+  }
+  #invoice.pdf-export .inv-header-right h1{
+    font-size:38px;
+    letter-spacing:2px;
+    margin-bottom:10px;
+  }
+  #invoice.pdf-export .inv-meta-line{
+    font-size:13px;
+    padding:3px 0;
   }
   #invoice.pdf-export .inv-body{
-    padding:18px 28px 24px;
+    padding:22px 32px 28px;
   }
   #invoice.pdf-export .parties{
-    margin-bottom:16px;
+    margin-bottom:18px;
+    gap:20px;
+  }
+  #invoice.pdf-export .party-box{
+    box-shadow:0 1px 4px rgba(0,0,0,0.05);
+  }
+  #invoice.pdf-export .bottom-grid{
+    gap:14px;
+    margin-top:18px;
+  }
+  #invoice.pdf-export .thanks-box{
+    color:#fff;
+    background:#111 !important;
+    border-top:3px solid var(--gold);
   }
   #invoice.pdf-export .bottom-grid,
   #invoice.pdf-export .thanks-box,
-  #invoice.pdf-export table.items{
+  #invoice.pdf-export table.items,
+  #invoice.pdf-export .inv-header,
+  #invoice.pdf-export .parties{
     page-break-inside:avoid;
     break-inside:avoid;
   }
-  .bottom-grid{
-    display:flex;
-    gap:16px;
-    margin-top:20px;
-    align-items:stretch;
-  }
   .notes-box{
     flex:1.1;
+    background:#fafafa;
+    border:1px solid #e8dcc8;
+    border-radius:8px;
+    padding:14px 16px;
   }
-  .notes-box h4, .bank-box h4{
+  .notes-box h4, .bank-box h4, .summary-box .sum-title{
     color:var(--gold-dark);
-    font-size:13.5px;
+    font-size:12px;
     font-family:'Segoe UI Semibold', 'Segoe UI', system-ui, Arial, sans-serif;
     font-weight:700;
-    letter-spacing:0.5px;
-    margin:0 0 8px;
-    padding-bottom:0;
-    border-bottom:none;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    margin:0 0 10px;
+    padding-bottom:6px;
+    border-bottom:2px solid var(--gold);
   }
   .notes-box p{
     font-size:12px;
-    line-height:1.6;
+    line-height:1.65;
     margin:0;
     color:#444;
   }
   .bank-box{
     flex:1;
     border:1px solid var(--gold);
-    border-radius:6px;
-    padding:12px 14px;
+    border-radius:8px;
+    padding:14px 16px;
+    background:#fffdf8;
   }
-  .bank-box p{font-size:12px; margin:4px 0; line-height:1.5;}
+  .bank-box p{font-size:12px; margin:5px 0; line-height:1.55;}
   .bank-box strong{color:var(--black);}
   .summary-box{
     flex:1;
     border:2px solid var(--gold);
-    border-radius:6px;
+    border-radius:8px;
     overflow:hidden;
     align-self:flex-start;
+    box-shadow:0 2px 8px rgba(0,0,0,0.06);
   }
   .summary-box .sum-title{
     background:var(--black);
     color:var(--gold);
-    padding:8px 14px;
-    font-size:13.5px;
-    font-family:'Segoe UI Semibold', 'Segoe UI', system-ui, Arial, sans-serif;
-    letter-spacing:0.5px;
-    font-weight:700;
+    padding:10px 16px;
+    border-bottom:none;
+    margin:0;
   }
   .summary-box .sum-row{
     display:flex;
     justify-content:space-between;
-    padding:8px 14px;
-    font-size:13.5px;
-    border-top:1px solid #f0e0c0;
+    padding:9px 16px;
+    font-size:13px;
+    border-top:1px solid #ead9b8;
+    background:#fff;
+  }
+  .summary-box .sum-row:nth-child(even){
+    background:#fffdf8;
   }
   .summary-box .sum-row.balance{
     background:var(--gold);
     color:var(--black);
     font-weight:800;
-    font-size:14.5px;
+    font-size:14px;
+    border-top:2px solid var(--black);
   }
   .thanks-box{
-    margin-top:20px;
-    border:1px solid var(--gold);
-    border-radius:6px;
+    margin-top:18px;
+    border:none;
+    border-radius:8px;
     text-align:center;
-    padding:14px;
+    padding:16px 20px;
     font-size:13px;
-    color:#333;
-    line-height:1.6;
+    color:#f0f0f0;
+    line-height:1.65;
+    background:var(--black);
   }
   .thanks-box .heart{color:var(--gold-dark);}
 
@@ -896,17 +976,21 @@ We truly appreciate your business and hope to work with you again in the future.
 
       <div class="parties avoid-break">
         <div class="party">
+          <div class="party-box">
           <h3>FROM:</h3>
           <p class="name" id="outFromName">Double Glazing Expert Limited</p>
           <p id="outFromAddress">208 Forest Road<br>E17 6JG</p>
           <p><strong>Phone:</strong> <span id="outFromPhone">07950 692018</span></p>
           <p><strong>Email:</strong> <span id="outFromEmail">info@doubleglazingexpert.com</span></p>
+          </div>
         </div>
         <div class="party">
+          <div class="party-box">
           <h3>TO:</h3>
           <p class="name" id="outToName"></p>
           <p id="outToAddress"></p>
           <p id="outToPhoneWrap"><strong>Phone:</strong> <span id="outToPhone"></span></p>
+          </div>
         </div>
       </div>
 
@@ -1109,6 +1193,7 @@ function generateInvoice(){
     subtotal += amt;
     if(!desc && !amt) return;
     const tr = document.createElement('tr');
+    tr.className = 'item-data';
     tr.innerHTML = `<td class="desc-col">${escapeHtml(desc).replace(/\n/g,'<br>')}</td><td class="amount-col">${amt ? fmtMoney(amt) : ''}</td>`;
     tbody.appendChild(tr);
   });
@@ -1126,22 +1211,53 @@ function generateInvoice(){
   due = due === '' ? autoRemaining : (parseFloat(due) || 0);
   finalPay = finalPay === '' ? due : (parseFloat(finalPay) || 0);
 
+  function addPayRow(label, amount, extraClass = ''){
+    const tr = document.createElement('tr');
+    tr.className = 'pay-row' + (extraClass ? ' ' + extraClass : '');
+    tr.innerHTML = `<td class="desc-col">${label}</td><td class="amount-col">${fmtMoney(amount)}</td>`;
+    tbody.appendChild(tr);
+  }
+
   if(subtotal || serviceCharge || deposit || itemBlocks.length){
-    const paymentLines = [];
     if(service.type === 'delivery'){
-      paymentLines.push(`Delivery charges: ${fmtMoney(delivery)}.`);
-      if(service.date) paymentLines.push(`${service.dateLabel}: ${fmtDate(service.date)}.`);
-      if(service.notes) paymentLines.push(`${service.notesLabel}: ${escapeHtml(service.notes)}.`);
+      addPayRow('Delivery charges', delivery);
+      if(service.date){
+        const tr = document.createElement('tr');
+        tr.className = 'pay-row meta';
+        tr.innerHTML = `<td class="desc-col" colspan="2">${service.dateLabel}: ${fmtDate(service.date)}</td>`;
+        tbody.appendChild(tr);
+      }
+      if(service.notes){
+        const tr = document.createElement('tr');
+        tr.className = 'pay-row meta';
+        tr.innerHTML = `<td class="desc-col" colspan="2">${service.notesLabel}: ${escapeHtml(service.notes)}</td>`;
+        tbody.appendChild(tr);
+      }
     } else {
-      paymentLines.push(`Collection charges: ${fmtMoney(collection)}.`);
-      if(service.date) paymentLines.push(`${service.dateLabel}: ${fmtDate(service.date)}.`);
-      if(service.location) paymentLines.push(`${service.locationLabel}: ${escapeHtml(service.location)}.`);
-      if(service.notes) paymentLines.push(`${service.notesLabel}: ${escapeHtml(service.notes)}.`);
+      addPayRow('Collection charges', collection);
+      if(service.date){
+        const tr = document.createElement('tr');
+        tr.className = 'pay-row meta';
+        tr.innerHTML = `<td class="desc-col" colspan="2">${service.dateLabel}: ${fmtDate(service.date)}</td>`;
+        tbody.appendChild(tr);
+      }
+      if(service.location){
+        const tr = document.createElement('tr');
+        tr.className = 'pay-row meta';
+        tr.innerHTML = `<td class="desc-col" colspan="2">${service.locationLabel}: ${escapeHtml(service.location)}</td>`;
+        tbody.appendChild(tr);
+      }
+      if(service.notes){
+        const tr = document.createElement('tr');
+        tr.className = 'pay-row meta';
+        tr.innerHTML = `<td class="desc-col" colspan="2">${service.notesLabel}: ${escapeHtml(service.notes)}</td>`;
+        tbody.appendChild(tr);
+      }
     }
-    paymentLines.push(`Total amount discussed: ${fmtMoney(total)}.`);
-    paymentLines.push(`Deposit paid: ${fmtMoney(deposit)}.`);
-    paymentLines.push(`Due amount: ${fmtMoney(due)}.`);
-    paymentLines.push(`Final pay: ${fmtMoney(finalPay)}.`);
+    addPayRow('Total amount discussed', total, 'total');
+    addPayRow('Deposit paid', deposit, 'highlight');
+    addPayRow('Due amount', due, 'highlight');
+    addPayRow('Final pay', finalPay, 'total');
 
     const termLines = [];
     if(service.type === 'delivery'){
@@ -1155,12 +1271,10 @@ function generateInvoice(){
     }
     termLines.push('Payment must be made to our account.');
 
-    const infoRow = document.createElement('tr');
-    infoRow.innerHTML = `<td class="desc-col info-summary">
-        ${paymentLines.map(line => `<div class="info-line">${line}</div>`).join('')}
-        <div class="info-terms">${termLines.map(line => `<div class="info-line">${line}</div>`).join('')}</div>
-      </td><td class="amount-col"></td>`;
-    tbody.appendChild(infoRow);
+    const termsRow = document.createElement('tr');
+    termsRow.className = 'terms-row';
+    termsRow.innerHTML = `<td colspan="2">${termLines.join(' ')}</td>`;
+    tbody.appendChild(termsRow);
   }
 
   // Notes
