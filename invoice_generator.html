@@ -249,32 +249,41 @@
     border:2px solid var(--gold);
     border-radius:8px;
     overflow:hidden;
-    box-shadow:0 2px 14px rgba(0,0,0,0.15);
+    box-shadow:0 4px 24px rgba(0,0,0,0.12);
+    position:relative;
+  }
+  .inv-top-bar{
+    height:5px;
+    background:linear-gradient(90deg, var(--gold-dark) 0%, var(--gold) 50%, var(--gold-dark) 100%);
   }
   .inv-body{
-    padding:32px 45px 40px;
+    padding:28px 40px 32px;
   }
   .inv-header{
     display:flex;
     align-items:center;
-    gap:28px;
-    background:var(--black);
-    padding:30px 45px;
-    border-bottom:3px solid #fff;
+    gap:24px;
+    background:linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 55%, #111 100%);
+    padding:26px 40px;
+    border-bottom:4px solid var(--gold);
     -webkit-print-color-adjust:exact;
     print-color-adjust:exact;
   }
   .inv-header .logo-wrap{
-    width:130px;
-    height:130px;
+    width:120px;
+    height:120px;
     flex-shrink:0;
     display:flex;
     align-items:center;
     justify-content:center;
+    background:rgba(255,255,255,0.04);
+    border:2px solid rgba(232,163,61,0.35);
+    border-radius:50%;
+    padding:8px;
   }
   .inv-header img{
-    width:130px;
-    height:130px;
+    width:100px;
+    height:100px;
     object-fit:contain;
     flex-shrink:0;
   }
@@ -289,23 +298,53 @@
     min-width:0;
   }
   .inv-header-right h1{
-    font-size:44px;
-    margin:0 0 12px;
+    font-size:40px;
+    margin:0 0 14px;
     font-family:'Segoe UI Semibold', 'Segoe UI', system-ui, Arial, sans-serif;
     color:var(--gold);
-    letter-spacing:1px;
+    letter-spacing:3px;
     font-weight:800;
+    text-shadow:0 1px 2px rgba(0,0,0,0.3);
+  }
+  .inv-meta-box{
+    background:rgba(232,163,61,0.08);
+    border:1px solid rgba(232,163,61,0.25);
+    border-radius:8px;
+    padding:10px 14px;
   }
   .inv-meta-line{
     display:flex;
     justify-content:space-between;
     gap:16px;
     border-top:none;
-    padding:4px 0;
-    font-size:14px;
-    color:#f0f0f0;
+    padding:3px 0;
+    font-size:13px;
+    color:#eee;
   }
-  .inv-meta-line strong{color:var(--gold);}
+  .inv-meta-line strong{color:var(--gold); font-weight:600;}
+  .inv-service-badge{
+    display:inline-block;
+    margin-bottom:16px;
+    padding:6px 14px;
+    background:#111;
+    color:var(--gold);
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+    border-radius:20px;
+    border:1px solid var(--gold);
+  }
+  .inv-section-title{
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+    color:var(--gold-dark);
+    margin:0 0 10px;
+    padding-bottom:6px;
+    border-bottom:2px solid rgba(232,163,61,0.4);
+  }
   .hr-full{
     border:none;
     border-top:2px solid var(--gold);
@@ -320,10 +359,12 @@
   .party{flex:1;}
   .party-box{
     background:linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
-    border-left:4px solid var(--gold);
-    padding:14px 18px;
-    border-radius:0 8px 8px 0;
+    border:1px solid #ead9b8;
+    border-left:5px solid var(--gold);
+    padding:16px 20px;
+    border-radius:0 10px 10px 0;
     min-height:100%;
+    box-shadow:0 2px 8px rgba(0,0,0,0.04);
   }
   .party h3{
     color:var(--gold-dark);
@@ -464,18 +505,20 @@
     gap:14px;
     margin-top:18px;
   }
-  #invoice.pdf-export .thanks-box{
-    color:#fff;
-    background:#111 !important;
-    border-top:3px solid var(--gold);
-  }
-  #invoice.pdf-export .bottom-grid,
+  #invoice.pdf-export .inv-footer,
+  #invoice.pdf-export .inv-top-bar,
   #invoice.pdf-export .thanks-box,
   #invoice.pdf-export table.items,
   #invoice.pdf-export .inv-header,
   #invoice.pdf-export .parties{
     page-break-inside:avoid;
     break-inside:avoid;
+  }
+  #invoice.pdf-export .inv-footer{
+    background:#111 !important;
+    color:#ccc !important;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
   }
   .notes-box{
     flex:1.1;
@@ -546,14 +589,26 @@
   .thanks-box{
     margin-top:18px;
     border:none;
-    border-radius:8px;
+    border-radius:0;
     text-align:center;
-    padding:16px 20px;
-    font-size:13px;
-    color:#f0f0f0;
-    line-height:1.65;
-    background:var(--black);
+    padding:18px 24px;
+    font-size:13.5px;
+    color:#f5f5f5;
+    line-height:1.7;
+    background:linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+    border-top:4px solid var(--gold);
   }
+  .thanks-box strong{color:var(--gold);}
+  .inv-footer{
+    background:#111;
+    color:#ccc;
+    text-align:center;
+    padding:12px 20px;
+    font-size:11px;
+    letter-spacing:0.3px;
+    border-top:2px solid var(--gold);
+  }
+  .inv-footer strong{color:var(--gold); font-weight:600;}
   .thanks-box .heart{color:var(--gold-dark);}
 
   @media print{
@@ -960,6 +1015,8 @@ We truly appreciate your business and hope to work with you again in the future.
   <div class="invoice-panel">
     <div id="invoice">
 
+      <div class="inv-top-bar"></div>
+
       <div class="inv-header avoid-break">
         <div class="logo-wrap">
           <img src="logo.png" alt="Double Glazing Expert Logo">
@@ -967,12 +1024,16 @@ We truly appreciate your business and hope to work with you again in the future.
         <div class="inv-divider-v"></div>
         <div class="inv-header-right">
           <h1>INVOICE</h1>
-          <div class="inv-meta-line"><strong>Invoice Number:</strong><span id="outInvNumber"></span></div>
-          <div class="inv-meta-line"><strong>Invoice Date:</strong><span id="outInvDate"></span></div>
+          <div class="inv-meta-box">
+            <div class="inv-meta-line"><strong>Invoice Number:</strong><span id="outInvNumber"></span></div>
+            <div class="inv-meta-line"><strong>Invoice Date:</strong><span id="outInvDate"></span></div>
+          </div>
         </div>
       </div>
 
       <div class="inv-body">
+
+      <div class="inv-service-badge" id="outServiceBadge">Delivery</div>
 
       <div class="parties avoid-break">
         <div class="party">
@@ -994,6 +1055,7 @@ We truly appreciate your business and hope to work with you again in the future.
         </div>
       </div>
 
+      <div class="inv-section-title">Order Details</div>
       <table class="items">
         <thead>
           <tr>
@@ -1005,6 +1067,7 @@ We truly appreciate your business and hope to work with you again in the future.
         </tbody>
       </table>
 
+      <div class="inv-section-title" style="margin-top:18px;">Payment &amp; Account Details</div>
       <div class="bottom-grid avoid-break">
         <div class="notes-box">
           <h4>NOTES / TERMS</h4>
@@ -1032,6 +1095,10 @@ We truly appreciate your business and hope to work with you again in the future.
         We truly appreciate your business and hope to work with you again in the future.
       </div>
 
+      </div>
+
+      <div class="inv-footer avoid-break">
+        <strong>Double Glazing Expert Limited</strong> &nbsp;|&nbsp; 208 Forest Road, E17 6JG &nbsp;|&nbsp; 07950 692018 &nbsp;|&nbsp; info@doubleglazingexpert.com
       </div>
     </div>
   </div>
@@ -1199,6 +1266,8 @@ function generateInvoice(){
   });
 
   const service = getServiceDetails();
+  document.getElementById('outServiceBadge').textContent = service.type === 'delivery' ? 'Delivery Service' : 'Collection Service';
+
   const delivery = service.type === 'delivery' ? service.charge : 0;
   const collection = service.type === 'collection' ? service.charge : 0;
   const serviceCharge = service.charge;
@@ -1296,7 +1365,9 @@ function generateInvoice(){
 
   // Thank you
   const thanksLines = document.getElementById('thankYouText').value.split('\n').filter(l=>l.trim()!=='');
-  document.getElementById('outThanks').innerHTML = thanksLines.map(escapeHtml).join('<br>');
+  document.getElementById('outThanks').innerHTML = thanksLines.length
+    ? thanksLines.map(l => escapeHtml(l)).join('<br>')
+    : 'Thank you for your business.<br><strong>We appreciate your trust in Double Glazing Expert Limited.</strong>';
 }
 
 // Live update: listen for any input/change anywhere in the form panel
